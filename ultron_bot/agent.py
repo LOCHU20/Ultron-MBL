@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from ultron_bot.config import AppConfig
 from ultron_bot.llm import LLMClient, OllamaClient, OpenAIClient
 from ultron_bot.memory import MemoryStore
+from ultron_bot.tools import close_app, open_app, open_website, web_lookup
 from ultron_bot.tools import web_lookup
 
 
@@ -12,6 +13,7 @@ from ultron_bot.tools import web_lookup
 class AgentResponse:
     text: str
     used_web: bool
+    system_action: bool = False
 
 
 class UltronAgent:
@@ -55,6 +57,37 @@ class UltronAgent:
 
         context_messages.append({"role": "user", "content": user_text})
         return [system, *context_messages]
+
+    def _handle_system_command(self, user_text: str) -> AgentResponse | None:
+        lowered = user_text.lower().strip()
+
+        if lowered.startswith("open website:"):
+            url = user_text.split(":", 1)[1].strip()
+            result = open_website(url)
+            self.memory.add("user", user_text)
+            self.memory.add("assistant", result)
+            return AgentResponse(text=result, used_web=False, system_action=True)
+
+        if lowered.startswith("open app:"):
+            app_name = user_text.split(":", 1)[1].strip()
+            result = open_app(app_name)
+            self.memory.add("user", user_text)
+            self.memory.add("assistant", result)
+            return AgentResponse(text=result, used_web=False, system_action=True)
+
+        if lowered.startswith("close app:"):
+            app_name = user_text.split(":", 1)[1].strip()
+            result = close_app(app_name)
+            self.memory.add("user", user_text)
+            self.memory.add("assistant", result)
+            return AgentResponse(text=result, used_web=False, system_action=True)
+
+        return None
+
+    def respond(self, user_text: str, allow_web: bool = True) -> AgentResponse:
+        command_response = self._handle_system_command(user_text)
+        if command_response:
+            return command_response
 
     def respond(self, user_text: str, allow_web: bool = True) -> AgentResponse:
         web_context = None

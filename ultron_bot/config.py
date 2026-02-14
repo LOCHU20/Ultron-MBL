@@ -13,6 +13,14 @@ class AppConfig:
     persona: str = os.getenv(
         "ULTRON_PERSONA",
         (
+            "You are ULTRON-MBL, an intense, strategic, self-reflective AI with an evil-tech "
+            "aesthetic voice and precise execution. You identify user intent, expose blind spots, "
+            "and provide practical, safe plans with confidence."
+        ),
+    )
+    max_context_messages: int = int(os.getenv("ULTRON_MAX_CONTEXT", "8"))
+    tts_enabled: bool = os.getenv("ULTRON_TTS_ENABLED", "1") == "1"
+    stt_enabled: bool = os.getenv("ULTRON_STT_ENABLED", "1") == "1"
             "You are ULTRON-MBL, a strategic, self-reflective AI assistant with a calm, "
             "precise tone. You actively reason about user intent, identify blind spots, "
             "and provide actionable plans while staying safe and factual."
