@@ -21,6 +21,12 @@ class AppConfig:
     max_context_messages: int = int(os.getenv("ULTRON_MAX_CONTEXT", "8"))
     tts_enabled: bool = os.getenv("ULTRON_TTS_ENABLED", "1") == "1"
     stt_enabled: bool = os.getenv("ULTRON_STT_ENABLED", "1") == "1"
+            "You are ULTRON-MBL, a strategic, self-reflective AI assistant with a calm, "
+            "precise tone. You actively reason about user intent, identify blind spots, "
+            "and provide actionable plans while staying safe and factual."
+        ),
+    )
+    max_context_messages: int = int(os.getenv("ULTRON_MAX_CONTEXT", "8"))
 
 
 def load_config() -> AppConfig:

@@ -9,6 +9,7 @@ def main() -> None:
     agent = UltronAgent(config)
     voice = VoiceEngine(tts_enabled=config.tts_enabled, stt_enabled=config.stt_enabled)
     app = UltronGUI(agent, voice)
+    app = UltronGUI(agent)
     app.run()
 
 

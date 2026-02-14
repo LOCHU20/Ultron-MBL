@@ -6,6 +6,7 @@ from ultron_bot.config import AppConfig
 from ultron_bot.llm import LLMClient, OllamaClient, OpenAIClient
 from ultron_bot.memory import MemoryStore
 from ultron_bot.tools import close_app, open_app, open_website, web_lookup
+from ultron_bot.tools import web_lookup
 
 
 @dataclass
@@ -88,6 +89,7 @@ class UltronAgent:
         if command_response:
             return command_response
 
+    def respond(self, user_text: str, allow_web: bool = True) -> AgentResponse:
         web_context = None
         used_web = False
 
